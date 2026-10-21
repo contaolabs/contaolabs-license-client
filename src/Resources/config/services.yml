@@ -33,10 +33,23 @@ services:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate, priority: -1024 }
 
-    ContaoLabs\LicenseClientBundle\EventListener\SystemMessagesListener:
-        arguments: ['@ContaoLabs\LicenseClientBundle\License\LicenseChecker', '@ContaoLabs\LicenseClientBundle\License\ProductRegistry', '@router']
+    # public, weil Contao den onload_callback über den Service-Namen aufruft
+    ContaoLabs\LicenseClientBundle\EventListener\BackendLockListener:
+        public: true
+        arguments:
+            - '@ContaoLabs\LicenseClientBundle\License\LicenseChecker'
+            - '@ContaoLabs\LicenseClientBundle\License\ProductRegistry'
+            - '@contao.framework'
+            - '@contao.routing.scope_matcher'
+            - '@request_stack'
+            - '@security.token_storage'
+            - '@router'
+            - '@database_connection'
         tags:
-            - { name: contao.hook, hook: getSystemMessages }
+            # nach der Anmeldung (Firewall: 8)
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: -8 }
+            - { name: contao.hook, hook: loadDataContainer, method: onLoadDataContainer }
+            - { name: contao.hook, hook: parseBackendTemplate, method: onParseBackendTemplate }
 
     # public, weil Contao die DCA-Callbacks über den Service-Namen aufruft
     ContaoLabs\LicenseClientBundle\EventListener\SettingsListener:

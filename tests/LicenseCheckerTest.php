@@ -185,6 +185,39 @@ class LicenseCheckerTest extends TestCase
         $this->assertSame(LicenseChecker::STATUS_VALID, $checker->getStatus('isotope-onepage-checkout')['status']);
     }
 
+    public function testLockOnlyForMissingOrRejectedKeys(): void
+    {
+        $product = 'isotope-onepage-checkout';
+
+        // Kein Schlüssel auf Produktiv-Domain: gesperrt
+        $this->assertTrue($this->checker(['example.de'], '')->isLocked($product));
+
+        // Entwicklungsdomain: nie gesperrt
+        $this->assertFalse($this->checker(['shop.test'], '')->isLocked($product));
+
+        // Schlüssel eingetragen, aber noch nie geprüft: nicht gesperrt
+        $this->assertFalse($this->checker(['example.de'], 'CL-IOC-AAAA')->isLocked($product));
+
+        // Lizenzserver nicht erreichbar: nicht gesperrt
+        $this->responses[] = new MockResponse('', ['error' => 'timeout']);
+        $this->responses[] = new MockResponse('', ['error' => 'timeout']);
+        $checker = $this->checker(['example.de'], 'CL-IOC-AAAA');
+        $checker->checkDue();
+        $this->assertFalse($checker->isLocked($product));
+
+        // Abgelehnt (nächster Seitenaufruf, 6 Stunden später): gesperrt
+        $this->now += LicenseChecker::RETRY;
+        $this->responses[] = $this->json(['valid' => false, 'code' => 'revoked']);
+        $checker = $this->checker(['example.de'], 'CL-IOC-AAAA');
+        $checker->checkDue();
+        $this->assertTrue($checker->isLocked($product));
+
+        // Gültig: frei
+        $this->responses[] = $this->json(['valid' => true, 'code' => 'valid']);
+        $checker->checkProduct($product, null, true);
+        $this->assertFalse($checker->isLocked($product));
+    }
+
     public function testUnwritableStoreMeansNoRequests(): void
     {
         $this->file = '/proc/nicht-schreibbar/licenses.json';

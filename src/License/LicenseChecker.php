@@ -31,6 +31,9 @@ class LicenseChecker
     /** @var \Closure(): int */
     private \Closure $clock;
 
+    /** @var array<string, array<string, mixed>> */
+    private array $statusCache = [];
+
     public function __construct(
         private readonly ProductRegistry $products,
         private readonly EnvironmentInterface $environment,
@@ -124,6 +127,7 @@ class LicenseChecker
             }
 
             $this->store->set($product, $domain, $entry);
+            unset($this->statusCache[$product]);
         }
     }
 
@@ -145,6 +149,12 @@ class LicenseChecker
      * @return array{status: string, code: string, domain: string, license: array<string, mixed>|null, checked_at: int, domains: list<string>}
      */
     public function getStatus(string $product): array
+    {
+        return $this->statusCache[$product] ??= $this->computeStatus($product);
+    }
+
+    /** @return array{status: string, code: string, domain: string, license: array<string, mixed>|null, checked_at: int, domains: list<string>} */
+    private function computeStatus(string $product): array
     {
         $domains = $this->getProductionDomains();
         $status = ['status' => self::STATUS_PENDING, 'code' => '', 'domain' => '', 'license' => null, 'checked_at' => 0, 'domains' => $domains];
@@ -189,6 +199,18 @@ class LicenseChecker
         }
 
         return $valid ?? $unreachable ?? $status;
+    }
+
+    /**
+     * Sind die Backend-Bereiche der Erweiterung gesperrt?
+     *
+     * Nur bei fehlendem oder vom Lizenzserver abgelehntem Schlüssel auf einer
+     * Produktiv-Domain. Nie bei Entwicklungsdomains, nie solange noch nicht
+     * geprüft wurde und nie, wenn der Lizenzserver nicht erreichbar war.
+     */
+    public function isLocked(string $product): bool
+    {
+        return \in_array($this->getStatus($product)['status'], [self::STATUS_MISSING, self::STATUS_INVALID], true);
     }
 
     /**

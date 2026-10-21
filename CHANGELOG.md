@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0 (21.10.2026)
+
+- Ohne gültige Lizenz sind die Backend-Bereiche der Erweiterung gesperrt, mit rotem Hinweis auf jeder Backend-Seite. Das Frontend läuft weiter
+- Die Erweiterungen melden Backend-Menüpunkte, Modultypen und Inhaltselemente an
+- Der Hinweis auf der Backend-Startseite entfällt (ersetzt durch den roten Hinweis)
+
 ## 1.0.1 (21.10.2026)
 
 - Kürzerer Hilfetext unter den Schlüsselfeldern, damit er in den Einstellungen nicht abgeschnitten wird

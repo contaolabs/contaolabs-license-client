@@ -10,7 +10,7 @@ Lizenzschlüssel unter **System → Einstellungen → contaolabs-Lizenzen** eint
 - **Was:** Lizenzschlüssel, Produktkennung und Domain, per POST an `https://contaolabs.de/api/license` (Ersatz: `https://contaolabs.zstov.de/api/license`). Keine Daten von Besuchern oder Kunden.
 - **Welche Domain:** die Domains der veröffentlichten Startpunkte (Feld „Domainname“), sonst die Domain des Backend-Aufrufs.
 - **Entwicklungsumgebungen:** `localhost`, private IP-Adressen, `*.local`, `*.test`, `*.localhost`, `*.ddev.site`, `*.lndo.site`, `dev.*`, `stage.*`, `staging.*`, `test.*`. Dafür wird nichts gesendet.
-- **Ohne gültige Lizenz:** nur ein Hinweis auf der Startseite des Backends (für Administratoren). Keine Funktion wird abgeschaltet.
+- **Ohne gültige Lizenz:** Die Backend-Bereiche der Erweiterung sind gesperrt (Menüpunkte leiten zu den Einstellungen um, ihre Frontend-Module und Inhaltselemente lassen sich nicht bearbeiten), und auf jeder Backend-Seite steht ein roter Hinweis. Das Frontend läuft immer weiter. Gesperrt wird nur bei fehlendem oder vom Lizenzserver abgelehntem Schlüssel, nie auf Entwicklungsdomains und nie, wenn der Lizenzserver nicht erreichbar ist.
 - **Lizenzserver nicht erreichbar:** Der letzte Stand bleibt gültig, neuer Versuch nach 6 Stunden. Zeitlimit je Anfrage 3 Sekunden.
 - **Zwischenspeicher:** `var/contaolabs/licenses.json` (ohne den Schlüssel selbst). Ist der Ordner nicht beschreibbar, wird gar nicht geprüft.
 
@@ -18,10 +18,15 @@ Die Adresse der API lässt sich mit der Umgebungsvariable `CONTAOLABS_LICENSE_AP
 
 ## Für Erweiterungen
 
-In der `composer.json` `"contaolabs/license-client": "^1.0"` verlangen und in der `config.php` die Produktkennung (Alias des Produkts im Shop) anmelden:
+In der `composer.json` `"contaolabs/license-client": "^1.1"` verlangen und in der `config.php` die Produktkennung (Alias des Produkts im Shop) mit den Bereichen anmelden, die ohne Lizenz gesperrt werden:
 
 ```php
-$GLOBALS['CONTAOLABS_LICENSES']['isotope-onepage-checkout'] = 'Isotope OnePage-Checkout';
+$GLOBALS['CONTAOLABS_LICENSES']['isotope-rent-products'] = [
+    'name' => 'Isotope Rent Products',
+    'backend_modules' => ['cl_isotope_rent_bookings', 'cl_isotope_rent_blocks'], // do=…
+    'module_types' => ['cl_isotope_rent_booking'],                               // tl_module.type
+    'content_types' => ['cl_isotope_rent_booking_ce'],                           // tl_content.type
+];
 ```
 
 ## Tests

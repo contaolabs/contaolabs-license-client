@@ -53,9 +53,6 @@
       <trans-unit id="MSC.contaolabs_license.checked_at">
         <source>Last checked: %s.</source>
       </trans-unit>
-      <trans-unit id="MSC.contaolabs_license.still_works">
-        <source>The extension keeps working.</source>
-      </trans-unit>
       <trans-unit id="MSC.contaolabs_license.to_settings">
         <source>Enter license key</source>
       </trans-unit>
@@ -64,6 +61,12 @@
       </trans-unit>
       <trans-unit id="MSC.contaolabs_license.info_dev">
         <source>This installation only runs on development domains (e.g. localhost, *.local, *.test, dev.*, staging.*). Nothing is sent.</source>
+      </trans-unit>
+      <trans-unit id="MSC.contaolabs_license.locked">
+        <source>Until a valid key is entered, the back end settings of this extension are locked. The front end keeps working.</source>
+      </trans-unit>
+      <trans-unit id="MSC.contaolabs_license.locked_area">
+        <source>This area belongs to %s and is locked without a valid license key. Please enter the key under “contaolabs licenses”.</source>
       </trans-unit>
     </body>
   </file>
