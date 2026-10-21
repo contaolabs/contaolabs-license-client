@@ -1,0 +1,46 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: false
+
+    contaolabs_license_client.http_client:
+        class: Symfony\Contracts\HttpClient\HttpClientInterface
+        factory: ['Symfony\Component\HttpClient\HttpClient', 'create']
+
+    ContaoLabs\LicenseClientBundle\License\ProductRegistry: ~
+
+    ContaoLabs\LicenseClientBundle\License\ContaoEnvironment:
+        arguments: ['@contao.framework', '@database_connection', '@request_stack']
+
+    ContaoLabs\LicenseClientBundle\License\LicenseApiClient:
+        arguments: ['@contaolabs_license_client.http_client']
+
+    ContaoLabs\LicenseClientBundle\License\StateStore:
+        arguments: ['%kernel.project_dir%/var/contaolabs/licenses.json']
+
+    ContaoLabs\LicenseClientBundle\License\LicenseChecker:
+        public: true
+        arguments:
+            - '@ContaoLabs\LicenseClientBundle\License\ProductRegistry'
+            - '@ContaoLabs\LicenseClientBundle\License\ContaoEnvironment'
+            - '@ContaoLabs\LicenseClientBundle\License\LicenseApiClient'
+            - '@ContaoLabs\LicenseClientBundle\License\StateStore'
+
+    ContaoLabs\LicenseClientBundle\EventListener\BackendCheckListener:
+        arguments: ['@ContaoLabs\LicenseClientBundle\License\LicenseChecker', '@contao.routing.scope_matcher']
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+            - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate, priority: -1024 }
+
+    ContaoLabs\LicenseClientBundle\EventListener\SystemMessagesListener:
+        arguments: ['@ContaoLabs\LicenseClientBundle\License\LicenseChecker', '@ContaoLabs\LicenseClientBundle\License\ProductRegistry', '@router']
+        tags:
+            - { name: contao.hook, hook: getSystemMessages }
+
+    # public, weil Contao die DCA-Callbacks über den Service-Namen aufruft
+    ContaoLabs\LicenseClientBundle\EventListener\SettingsListener:
+        public: true
+        arguments: ['@ContaoLabs\LicenseClientBundle\License\LicenseChecker', '@ContaoLabs\LicenseClientBundle\License\ProductRegistry']
+        tags:
+            - { name: contao.hook, hook: loadDataContainer, method: onLoadDataContainer }

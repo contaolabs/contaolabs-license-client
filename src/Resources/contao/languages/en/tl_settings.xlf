@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_settings.xlf" source-language="en">
+    <body>
+      <trans-unit id="tl_settings.contaolabs_license_legend">
+        <source>contaolabs licenses</source>
+      </trans-unit>
+      <trans-unit id="tl_settings.contaolabs_license_key.0">
+        <source>License key %s</source>
+      </trans-unit>
+      <trans-unit id="tl_settings.contaolabs_license_key.1">
+        <source>Shown on contaolabs.de under “My account” → “My licenses” and in the order confirmation. Checked when saving.</source>
+      </trans-unit>
+      <trans-unit id="tl_settings.contaolabs_license_status.0">
+        <source>License check status</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

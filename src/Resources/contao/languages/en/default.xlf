@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/default.xlf" source-language="en">
+    <body>
+      <trans-unit id="MSC.contaolabs_license.valid">
+        <source>Valid (%s).</source>
+      </trans-unit>
+      <trans-unit id="MSC.contaolabs_license.type_standard">
+        <source>standard license</source>
+      </trans-unit>
+      <trans-unit id="MSC.contaolabs_license.type_agentur">
+        <source>agency license</source>
+      </trans-unit>
+      <trans-unit id="MSC.contaolabs_license.type_unknown">
+        <source>license</source>
+      </trans-unit>
+      <trans-unit id="MSC.contaolabs_license.updates_until">
+        <source>Updates and support until %s.</source>
+      </trans-unit>
+      <trans-unit id="MSC.contaolabs_license.updates_expired">
+        <source>Updates and support expired on %s. The installed version keeps working; an update renewal is available on contaolabs.de.</source>
+      </trans-unit>
+      <trans-unit id="MSC.contaolabs_license.missing">
+        <source>No license key entered.</source>
+      </trans-unit>
+      <trans-unit id="MSC.contaolabs_license.dev">
+        <source>Development environment, no check needed.</source>
+      </trans-unit>
+      <trans-unit id="MSC.contaolabs_license.pending">
+        <source>Not checked yet. The check runs the next time the back end is opened.</source>
+      </trans-unit>
+      <trans-unit id="MSC.contaolabs_license.unreachable">
+        <source>The license server could not be reached. The extension keeps working; next attempt in a few hours.</source>
+      </trans-unit>
+      <trans-unit id="MSC.contaolabs_license.code_not_found">
+        <source>Unknown license key. Please check your input.</source>
+      </trans-unit>
+      <trans-unit id="MSC.contaolabs_license.code_wrong_product">
+        <source>This license key belongs to a different extension.</source>
+      </trans-unit>
+      <trans-unit id="MSC.contaolabs_license.code_revoked">
+        <source>This license has been revoked. Please contact support@contaolabs.de.</source>
+      </trans-unit>
+      <trans-unit id="MSC.contaolabs_license.code_unpaid">
+        <source>The order has not been paid yet. The license is activated as soon as the payment arrives.</source>
+      </trans-unit>
+      <trans-unit id="MSC.contaolabs_license.code_domain_limit">
+        <source>The license is already activated for %s. Another domain needs its own license or an agency license. When moving to a new domain, support releases the old one.</source>
+      </trans-unit>
+      <trans-unit id="MSC.contaolabs_license.code_other">
+        <source>The license is invalid (%s).</source>
+      </trans-unit>
+      <trans-unit id="MSC.contaolabs_license.checked_at">
+        <source>Last checked: %s.</source>
+      </trans-unit>
+      <trans-unit id="MSC.contaolabs_license.still_works">
+        <source>The extension keeps working.</source>
+      </trans-unit>
+      <trans-unit id="MSC.contaolabs_license.to_settings">
+        <source>Enter license key</source>
+      </trans-unit>
+      <trans-unit id="MSC.contaolabs_license.info_domains">
+        <source>Checked for: %s. Only the license key, product ID and domain are sent, at most once a day.</source>
+      </trans-unit>
+      <trans-unit id="MSC.contaolabs_license.info_dev">
+        <source>This installation only runs on development domains (e.g. localhost, *.local, *.test, dev.*, staging.*). Nothing is sent.</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

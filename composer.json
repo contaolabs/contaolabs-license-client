@@ -1,0 +1,42 @@
+{
+  "name": "contaolabs/license-client",
+  "description": "Lizenzprüfung für die Erweiterungen von contaolabs.de (Contao 4.13 und 5.x). Prüft einmal täglich im Hintergrund und zeigt bei fehlender Lizenz nur einen Hinweis im Backend.",
+  "type": "contao-bundle",
+  "license": "MIT",
+  "homepage": "https://contaolabs.de",
+  "authors": [
+    {
+      "name": "contaolabs",
+      "homepage": "https://contaolabs.de"
+    }
+  ],
+  "support": {
+    "email": "support@contaolabs.de"
+  },
+  "require": {
+    "php": "^8.1",
+    "contao/core-bundle": "^4.13 || ^5.3",
+    "symfony/http-client": "^5.4 || ^6.4 || ^7.0",
+    "symfony/http-client-contracts": "^2.5 || ^3.0"
+  },
+  "require-dev": {
+    "contao/manager-plugin": "^2.0",
+    "phpunit/phpunit": "^9.6 || ^10.5"
+  },
+  "conflict": {
+    "contao/manager-plugin": "<2.0 || >=3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "ContaoLabs\\LicenseClientBundle\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "ContaoLabs\\LicenseClientBundle\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "contao-manager-plugin": "ContaoLabs\\LicenseClientBundle\\ContaoManager\\Plugin"
+  }
+}
