@@ -11,8 +11,8 @@
         <target>Lizenzschlüssel %s</target>
       </trans-unit>
       <trans-unit id="tl_settings.contaolabs_license_key.1">
-        <source>Shown on contaolabs.de under “My account” → “My licenses” and in the order confirmation. Checked when saving.</source>
-        <target>Steht auf contaolabs.de unter „Mein Konto“ → „Meine Lizenzen“ und in der Bestellbestätigung. Wird beim Speichern geprüft.</target>
+        <source>On contaolabs.de under “My account” → “My licenses”.</source>
+        <target>Auf contaolabs.de unter „Mein Konto“ → „Meine Lizenzen“.</target>
       </trans-unit>
       <trans-unit id="tl_settings.contaolabs_license_status.0">
         <source>License check status</source>

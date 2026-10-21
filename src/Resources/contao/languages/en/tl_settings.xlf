@@ -9,7 +9,7 @@
         <source>License key %s</source>
       </trans-unit>
       <trans-unit id="tl_settings.contaolabs_license_key.1">
-        <source>Shown on contaolabs.de under “My account” → “My licenses” and in the order confirmation. Checked when saving.</source>
+        <source>On contaolabs.de under “My account” → “My licenses”.</source>
       </trans-unit>
       <trans-unit id="tl_settings.contaolabs_license_status.0">
         <source>License check status</source>
