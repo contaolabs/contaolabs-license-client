@@ -54,8 +54,8 @@ class DomainHelperTest extends TestCase
     public function testProductionDomains(): void
     {
         $this->assertSame(
-            ['example.de', 'example.at'],
-            DomainHelper::productionDomains(['www.example.de', 'example.de', 'staging.example.de', 'example.at', 'localhost', ''])
+            ['example.at', 'example.de', 'en.example.de'],
+            DomainHelper::productionDomains(['en.example.de', 'www.example.de', 'example.de', 'staging.example.de', 'example.at', 'localhost', ''])
         );
     }
 }

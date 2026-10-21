@@ -69,7 +69,7 @@ final class DomainHelper
     /**
      * @param iterable<string> $domains
      *
-     * @return list<string> vereinfachte, eindeutige Produktiv-Domains
+     * @return list<string> vereinfachte, eindeutige Produktiv-Domains, Hauptdomains zuerst
      */
     public static function productionDomains(iterable $domains): array
     {
@@ -83,6 +83,12 @@ final class DomainHelper
             }
         }
 
-        return array_keys($result);
+        $result = array_keys($result);
+
+        // Hauptdomains zuerst: Die Lizenz-API trägt die erste Domain ein und
+        // wertet Subdomains davon (z. B. Sprachversionen) als zugehörig.
+        usort($result, static fn (string $a, string $b): int => [substr_count($a, '.'), $a] <=> [substr_count($b, '.'), $b]);
+
+        return $result;
     }
 }
