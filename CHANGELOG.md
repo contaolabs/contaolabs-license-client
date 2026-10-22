@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1 (22.10.2026)
+
+- Meldung bei erreichter Obergrenze nennt die Lizenzstufen (S, M, L, Unlimited) und den Wechsel in eine höhere Stufe unter „Mein Konto“
+
 ## 1.1.0 (21.10.2026)
 
 - Ohne gültige Lizenz sind die Backend-Bereiche der Erweiterung gesperrt, mit rotem Hinweis auf jeder Backend-Seite. Das Frontend läuft weiter

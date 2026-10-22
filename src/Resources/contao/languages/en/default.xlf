@@ -45,7 +45,7 @@
         <source>The order has not been paid yet. The license is activated as soon as the payment arrives.</source>
       </trans-unit>
       <trans-unit id="MSC.contaolabs_license.code_domain_limit">
-        <source>The license is already activated for %s. Another domain needs its own license or an agency license. When moving to a new domain, support releases the old one.</source>
+        <source>The license is already activated for %s and has reached the limit of its license tier. Another domain needs its own license or a higher tier (under “My account” on contaolabs.de, you only pay the difference). When moving to a new domain, support releases the old one.</source>
       </trans-unit>
       <trans-unit id="MSC.contaolabs_license.code_other">
         <source>The license is invalid (%s).</source>
