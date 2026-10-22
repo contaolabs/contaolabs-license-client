@@ -92,23 +92,39 @@ class LicenseCheckerTest extends TestCase
         $checker->checkDue();
 
         $this->now += LicenseChecker::INTERVAL;
-        // Beide Adressen fallen aus
-        $this->responses[] = new MockResponse('', ['error' => 'Could not resolve host']);
+        // Die Lizenz-API fällt aus (nur eine Standardadresse seit 1.1.2)
         $this->responses[] = new MockResponse('<html>Wartung</html>', ['http_code' => 503]);
         $checker->checkDue();
 
-        $this->assertCount(3, $this->requests);
-        $this->assertSame('https://contaolabs.zstov.de/api/license', $this->requests[2]['url']);
+        $this->assertCount(2, $this->requests);
+        $this->assertSame('https://contaolabs.de/api/license', $this->requests[1]['url']);
         $this->assertSame(LicenseChecker::STATUS_VALID, $checker->getStatus('isotope-onepage-checkout')['status']);
 
         $this->now += LicenseChecker::RETRY - 1;
         $checker->checkDue();
-        $this->assertCount(3, $this->requests);
+        $this->assertCount(2, $this->requests);
 
         $this->now += 1;
         $this->responses[] = $this->json(['valid' => true, 'code' => 'valid']);
         $checker->checkDue();
-        $this->assertCount(4, $this->requests);
+        $this->assertCount(3, $this->requests);
+    }
+
+    public function testDefaultEndpointIsOnlyContaolabsDe(): void
+    {
+        $this->assertSame(['https://contaolabs.de/api/license'], LicenseApiClient::DEFAULT_ENDPOINTS);
+    }
+
+    public function testCustomEndpointsAreTriedInOrder(): void
+    {
+        // Eigene Adressen (z. B. über CONTAOLABS_LICENSE_API) werden weiter der Reihe nach probiert
+        $this->responses[] = new MockResponse('', ['error' => 'Could not resolve host']);
+        $this->responses[] = $this->json(['valid' => true, 'code' => 'valid']);
+        $checker = $this->checker(['example.de'], 'CL-IOC-AAAA', ['https://eins.example/api', 'https://zwei.example/api']);
+        $checker->checkDue();
+
+        $this->assertSame(['https://eins.example/api', 'https://zwei.example/api'], array_column($this->requests, 'url'));
+        $this->assertSame(LicenseChecker::STATUS_VALID, $checker->getStatus('isotope-onepage-checkout')['status']);
     }
 
     public function testNeverReachedShowsUnreachableWithoutNotice(): void
@@ -149,12 +165,13 @@ class LicenseCheckerTest extends TestCase
 
     public function testRedirectIsNotFollowed(): void
     {
-        $this->responses[] = new MockResponse('', ['http_code' => 301, 'response_headers' => ['Location' => 'https://contaolabs.de/api/license']]);
+        // Erste Adresse leitet um: nicht folgen, sondern die nächste Adresse fragen
+        $this->responses[] = new MockResponse('', ['http_code' => 301, 'response_headers' => ['Location' => 'https://evil.example/api']]);
         $this->responses[] = $this->json(['valid' => true, 'code' => 'valid']);
-        $checker = $this->checker(['example.de'], 'CL-IOC-AAAA');
+        $checker = $this->checker(['example.de'], 'CL-IOC-AAAA', ['https://eins.example/api', 'https://zwei.example/api']);
         $checker->checkDue();
 
-        $this->assertCount(2, $this->requests);
+        $this->assertSame(['https://eins.example/api', 'https://zwei.example/api'], array_column($this->requests, 'url'));
         $this->assertSame(LicenseChecker::STATUS_VALID, $checker->getStatus('isotope-onepage-checkout')['status']);
     }
 
@@ -162,10 +179,10 @@ class LicenseCheckerTest extends TestCase
     {
         $this->responses[] = new MockResponse('', ['error' => 'timeout']);
         $this->responses[] = new MockResponse('', ['error' => 'timeout']);
-        $checker = $this->checker(['example.de', 'example.at'], 'CL-IOC-AAAA');
+        $checker = $this->checker(['example.de', 'example.at'], 'CL-IOC-AAAA', ['https://eins.example/api', 'https://zwei.example/api']);
         $checker->checkDue();
 
-        // Zwei Domains, aber jede Adresse wurde nur einmal gefragt
+        // Zwei Domains, zwei Adressen, aber jede Adresse wurde nur einmal gefragt
         $this->assertCount(2, $this->requests);
     }
 
@@ -200,7 +217,6 @@ class LicenseCheckerTest extends TestCase
 
         // Lizenzserver nicht erreichbar: nicht gesperrt
         $this->responses[] = new MockResponse('', ['error' => 'timeout']);
-        $this->responses[] = new MockResponse('', ['error' => 'timeout']);
         $checker = $this->checker(['example.de'], 'CL-IOC-AAAA');
         $checker->checkDue();
         $this->assertFalse($checker->isLocked($product));
@@ -227,7 +243,7 @@ class LicenseCheckerTest extends TestCase
         $this->assertSame([], $this->requests);
     }
 
-    private function checker(array $domains, string $key): LicenseChecker
+    private function checker(array $domains, string $key, ?array $endpoints = null): LicenseChecker
     {
         $environment = new class($domains, $key) implements EnvironmentInterface {
             public function __construct(private array $domains, private string $key)
@@ -254,7 +270,7 @@ class LicenseCheckerTest extends TestCase
         return new LicenseChecker(
             new ProductRegistry(['isotope-onepage-checkout' => 'Isotope OnePage-Checkout']),
             $environment,
-            new LicenseApiClient($http),
+            new LicenseApiClient($http, $endpoints),
             new StateStore($this->file),
             fn (): int => $this->now,
         );

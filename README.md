@@ -7,7 +7,7 @@ Gemeinsame Lizenzprüfung für die Erweiterungen von [contaolabs.de](https://con
 Lizenzschlüssel unter **System → Einstellungen → contaolabs-Lizenzen** eintragen. Die Seite zeigt darunter den Stand der Prüfung.
 
 - **Wann:** höchstens einmal täglich je Erweiterung und Domain, nur nach dem Aufruf einer Backend-Seite und erst nachdem die Seite ausgeliefert ist. Beim Speichern eines neuen Schlüssels sofort.
-- **Was:** Lizenzschlüssel, Produktkennung und Domain, per POST an `https://contaolabs.de/api/license` (Ersatz: `https://contaolabs.zstov.de/api/license`). Keine Daten von Besuchern oder Kunden.
+- **Was:** Lizenzschlüssel, Produktkennung und Domain, per POST an `https://contaolabs.de/api/license`. Keine Daten von Besuchern oder Kunden.
 - **Welche Domain:** die Domains der veröffentlichten Startpunkte (Feld „Domainname“), sonst die Domain des Backend-Aufrufs.
 - **Entwicklungsumgebungen:** `localhost`, private IP-Adressen, `*.local`, `*.test`, `*.localhost`, `*.ddev.site`, `*.lndo.site`, `dev.*`, `stage.*`, `staging.*`, `test.*`. Dafür wird nichts gesendet.
 - **Ohne gültige Lizenz:** Die Backend-Bereiche der Erweiterung sind gesperrt (Menüpunkte leiten zu den Einstellungen um, ihre Frontend-Module und Inhaltselemente lassen sich nicht bearbeiten), und auf jeder Backend-Seite steht ein roter Hinweis. Das Frontend läuft immer weiter. Gesperrt wird nur bei fehlendem oder vom Lizenzserver abgelehntem Schlüssel, nie auf Entwicklungsdomains und nie, wenn der Lizenzserver nicht erreichbar ist.
