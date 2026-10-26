@@ -26,6 +26,9 @@
       <trans-unit id="MSC.contaolabs_license.dev">
         <source>Development environment, no check needed.</source>
       </trans-unit>
+      <trans-unit id="MSC.contaolabs_license.house">
+        <source>Website of contaolabs, all extensions are enabled.</source>
+      </trans-unit>
       <trans-unit id="MSC.contaolabs_license.pending">
         <source>Not checked yet. The check runs the next time the back end is opened.</source>
       </trans-unit>
@@ -61,6 +64,9 @@
       </trans-unit>
       <trans-unit id="MSC.contaolabs_license.info_dev">
         <source>This installation only runs on development domains (e.g. localhost, *.local, *.test, dev.*, staging.*). Nothing is sent.</source>
+      </trans-unit>
+      <trans-unit id="MSC.contaolabs_license.info_house">
+        <source>This installation only runs on contaolabs.de or one of its subdomains. All contaolabs extensions are enabled there without a license key. Nothing is sent.</source>
       </trans-unit>
       <trans-unit id="MSC.contaolabs_license.locked">
         <source>Until a valid key is entered, the back end settings of this extension are locked. The front end keeps working.</source>

@@ -56,6 +56,37 @@ class LicenseCheckerTest extends TestCase
         $this->assertSame([], $checker->getProblems());
     }
 
+    public function testContaolabsDomainsNeedNoKey(): void
+    {
+        $checker = $this->checker(['contaolabs.de', 'www.contaolabs.de', 'demo.contaolabs.de', 'localhost'], '');
+        $checker->checkDue();
+
+        $this->assertSame([], $this->requests);
+        $this->assertTrue($checker->isHouseInstallation());
+        $this->assertSame(LicenseChecker::STATUS_HOUSE, $checker->getStatus('isotope-onepage-checkout')['status']);
+        $this->assertFalse($checker->isLocked('isotope-onepage-checkout'));
+        $this->assertSame([], $checker->getProblems());
+    }
+
+    public function testContaolabsDomainNextToCustomerDomainStillNeedsKey(): void
+    {
+        $checker = $this->checker(['shop.example.de', 'demo.contaolabs.de'], '');
+        $checker->checkDue();
+
+        $this->assertFalse($checker->isHouseInstallation());
+        $this->assertSame(['shop.example.de'], $checker->getProductionDomains());
+        $this->assertSame(LicenseChecker::STATUS_MISSING, $checker->getStatus('isotope-onepage-checkout')['status']);
+        $this->assertTrue($checker->isLocked('isotope-onepage-checkout'));
+    }
+
+    public function testDevelopmentOnlyIsNotHouse(): void
+    {
+        $checker = $this->checker(['localhost'], '');
+
+        $this->assertFalse($checker->isHouseInstallation());
+        $this->assertSame(LicenseChecker::STATUS_DEV, $checker->getStatus('isotope-onepage-checkout')['status']);
+    }
+
     public function testValidLicenseOnlySendsKeyProductAndDomainOncePerDay(): void
     {
         $this->responses[] = $this->json(['valid' => true, 'code' => 'valid', 'message' => 'Lizenz gültig.', 'license' => ['product' => 'isotope-onepage-checkout', 'type' => 'standard', 'domains' => ['example.de'], 'updates_until' => '2027-10-21T12:00:00+02:00']]);

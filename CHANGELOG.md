@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.3 (26.10.2026)
+
+- `contaolabs.de` und alle Subdomains (z. B. `demo.contaolabs.de`) gelten als Seiten von contaolabs: Läuft eine Installation nur dort (und auf Entwicklungsdomains), sind alle Erweiterungen ohne Lizenzschlüssel freigeschaltet, nichts wird gesperrt und nichts an die Lizenz-API gesendet
+- Eigener Stand „Website von contaolabs, alle Erweiterungen sind freigeschaltet“ in den Einstellungen statt „Entwicklungsumgebung“
+- Gibt es neben einer contaolabs-Domain weitere Domains, brauchen diese wie bisher einen gültigen Schlüssel
+
 ## 1.1.2 (22.10.2026)
 
 - Ersatzadresse `https://contaolabs.zstov.de/api/license` entfernt, die Testdomain gibt es nicht mehr. Geprüft wird nur noch `https://contaolabs.de/api/license`; ist sie nicht erreichbar, bleibt wie bisher der letzte Stand gültig und nichts wird gesperrt

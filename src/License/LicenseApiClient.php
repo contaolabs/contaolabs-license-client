@@ -21,7 +21,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class LicenseApiClient
 {
-    public const VERSION = '1.1.2';
+    public const VERSION = '1.1.3';
 
     public const DEFAULT_ENDPOINTS = [
         'https://contaolabs.de/api/license',

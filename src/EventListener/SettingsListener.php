@@ -102,7 +102,7 @@ class SettingsListener
             foreach ($this->products->all() as $product => $name) {
                 $status = $this->checker->getStatus($product);
                 $class = match ($status['status']) {
-                    LicenseChecker::STATUS_VALID => 'tl_green',
+                    LicenseChecker::STATUS_VALID, LicenseChecker::STATUS_HOUSE => 'tl_green',
                     LicenseChecker::STATUS_INVALID => 'tl_red',
                     LicenseChecker::STATUS_MISSING => 'tl_orange',
                     default => 'tl_gray',
@@ -122,7 +122,7 @@ class SettingsListener
         }
 
         $info = [] === $domains
-            ? $formatter->label('info_dev')
+            ? $formatter->label($this->checker->isHouseInstallation() ? 'info_house' : 'info_dev')
             : sprintf($formatter->label('info_domains'), implode(', ', $domains));
 
         return sprintf(

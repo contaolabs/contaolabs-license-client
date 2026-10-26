@@ -51,6 +51,19 @@ class DomainHelperTest extends TestCase
         yield ['93.184.216.34', false];
     }
 
+    public function testIsHouse(): void
+    {
+        foreach (['contaolabs.de', 'www.contaolabs.de', 'demo.contaolabs.de', 'https://demo.contaolabs.de:443/shop', 'CONTAOLABS.DE.'] as $domain) {
+            $this->assertTrue(DomainHelper::isHouse($domain), $domain);
+        }
+
+        foreach (['fakecontaolabs.de', 'contaolabs.de.example.com', 'contaolabs.com', 'example.de', ''] as $domain) {
+            $this->assertFalse(DomainHelper::isHouse($domain), $domain);
+        }
+
+        $this->assertSame(['example.de'], DomainHelper::productionDomains(['contaolabs.de', 'demo.contaolabs.de', 'example.de']));
+    }
+
     public function testProductionDomains(): void
     {
         $this->assertSame(

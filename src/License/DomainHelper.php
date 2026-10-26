@@ -15,6 +15,10 @@ namespace ContaoLabs\LicenseClientBundle\License;
  * Die Muster entsprechen denen der Lizenz-API auf contaolabs.de. Für diese
  * Domains wird keine Anfrage gesendet (AGB § 4: Entwicklungs-, Test- und
  * Staging-Umgebungen sind zusätzlich gestattet).
+ *
+ * contaolabs.de und alle Subdomains (z. B. demo.contaolabs.de) sind die
+ * eigenen Seiten von contaolabs. Dort sind alle Erweiterungen ohne
+ * Lizenzschlüssel freigeschaltet, es wird ebenfalls nichts gesendet.
  */
 final class DomainHelper
 {
@@ -25,6 +29,8 @@ final class DomainHelper
         '/\.(local|test|localhost|ddev\.site|lndo\.site)$/',
         '/^(dev|stage|staging|test)\./',
     ];
+
+    private const HOUSE_PATTERN = '/(^|\.)contaolabs\.de$/';
 
     public static function normalize(string $domain): string
     {
@@ -66,6 +72,12 @@ final class DomainHelper
         return false;
     }
 
+    /** Eigene Seite von contaolabs (contaolabs.de oder Subdomain)? */
+    public static function isHouse(string $domain): bool
+    {
+        return 1 === preg_match(self::HOUSE_PATTERN, self::normalize($domain));
+    }
+
     /**
      * @param iterable<string> $domains
      *
@@ -78,7 +90,7 @@ final class DomainHelper
         foreach ($domains as $domain) {
             $domain = self::normalize((string) $domain);
 
-            if ('' !== $domain && !self::isDevelopment($domain)) {
+            if ('' !== $domain && !self::isDevelopment($domain) && !self::isHouse($domain)) {
                 $result[$domain] = true;
             }
         }

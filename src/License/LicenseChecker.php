@@ -25,6 +25,7 @@ class LicenseChecker
     public const STATUS_INVALID = 'invalid';
     public const STATUS_MISSING = 'missing';
     public const STATUS_DEV = 'dev';
+    public const STATUS_HOUSE = 'house';
     public const STATUS_PENDING = 'pending';
     public const STATUS_UNREACHABLE = 'unreachable';
 
@@ -53,6 +54,24 @@ class LicenseChecker
     public function getProductionDomains(): array
     {
         return DomainHelper::productionDomains($this->environment->getDomains());
+    }
+
+    /**
+     * Läuft die Installation nur unter Seiten von contaolabs (und Entwicklungsdomains)?
+     */
+    public function isHouseInstallation(): bool
+    {
+        if ([] !== $this->getProductionDomains()) {
+            return false;
+        }
+
+        foreach ($this->environment->getDomains() as $domain) {
+            if (DomainHelper::isHouse((string) $domain)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -160,7 +179,7 @@ class LicenseChecker
         $status = ['status' => self::STATUS_PENDING, 'code' => '', 'domain' => '', 'license' => null, 'checked_at' => 0, 'domains' => $domains];
 
         if ([] === $domains) {
-            return ['status' => self::STATUS_DEV] + $status;
+            return ['status' => $this->isHouseInstallation() ? self::STATUS_HOUSE : self::STATUS_DEV] + $status;
         }
 
         $key = self::normalizeKey($this->environment->getLicenseKey($product));
